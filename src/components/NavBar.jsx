@@ -70,7 +70,7 @@ function NavBar() {
             <NavLink
               to="/tv"
               className={({ isActive }) =>
-                isActive ? 'text-blue-400' : 'hover:text-blue-400'
+                isActive ? 'text-blue-400' : 'hover:text-blue-500'
               }
             >
               TV Shows
@@ -256,6 +256,58 @@ function NavBar() {
           </div>
         )}
       </nav>
+
+      {/* Mobile Bottom Navigation */}
+      <div className="lg:hidden fixed bottom-0 w-full bg-gray-900 border-gray-700 z-50">
+        <div className="flex justify-around text-white text-sm py-2">
+          <NavLink
+            to="/home"
+            className={({ isActive }) =>
+              isActive
+                ? 'flex flex-col items-center text-blue-500'
+                : 'flex flex-col items-center'
+            }
+          >
+            <FiHome size={20} /> Home
+          </NavLink>
+          <button
+            onClick={() => setShowModal(true)}
+            className="flex flex-col items-center"
+          >
+            <FiSearch size={20} /> Search
+          </button>
+          <NavLink
+            to="/favorites"
+            className={({ isActive }) =>
+              isActive
+                ? 'flex flex-col items-center text-blue-500'
+                : 'flex flex-col items-center'
+            }
+          >
+            <FiHeart size={20} /> Watchlist
+          </NavLink>
+          <NavLink
+            to="/top-rated"
+            className={({ isActive }) =>
+              isActive
+                ? 'flex flex-col items-center text-blue-500'
+                : 'flex flex-col items-center'
+            }
+          >
+            <FiStar size={20} /> Trending
+          </NavLink>
+          <NavLink
+            to="/profile"
+            className={({ isActive }) =>
+              isActive
+                ? 'flex flex-col items-center text-blue-500'
+                : 'flex flex-col items-center'
+            }
+          >
+            <FiUser size={20} /> Profile
+          </NavLink>
+        </div>
+      </div>
     </>
   );
 }

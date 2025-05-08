@@ -27,7 +27,7 @@ function App() {
       <ScrollToTop />
 
       {/* Page Content */}
-      <main className="">
+      <main>
         {' '}
         {/* padding to account for sticky navs */}
         <Routes>

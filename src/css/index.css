@@ -112,6 +112,9 @@ h1 {
   .mobile-header {
     padding: 0px 1.25rem;
   }
+  #root {
+    padding-bottom: 55px;
+  }
 }
 .modal-search {
   font-size: 40px;
