@@ -72,7 +72,9 @@ function GenrePage() {
   return (
     <div className="text-white">
       {loading ? (
-        <p className="text-lg">Loading...</p>
+        <p className="text-lg text-center mt-50 mb-86.5 loading">
+          Loading All Movies...
+        </p>
       ) : (
         <>
           {/* Hero */}

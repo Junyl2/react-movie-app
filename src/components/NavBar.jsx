@@ -32,6 +32,18 @@ function NavBar() {
 
   const genreList = ['All', 'Action', 'Romance', 'Comedy', 'Horror', 'Sci-Fi'];
 
+  const closeMobileMenus = () => {
+    setMobileMenuOpen(false);
+    setGenresOpen(false);
+    setShowModal(false);
+  };
+
+  const closeGenreOnSearch = () => {
+    setShowModal(true);
+    setGenresOpen(false);
+    setMobileMenuOpen(false);
+  };
+
   // 🌟 Scroll Detection
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -49,7 +61,9 @@ function NavBar() {
       {/* Top Navbar */}
       <nav
         className={`fixed top-0 start-0 end-0 z-50 shadow-md text-white transition-colors duration-300 ${
-          isScrolled ? 'bg-black' : 'bg-black/50'
+          isScrolled
+            ? 'bg-gradient-to-br from-black to-gray-950'
+            : 'bg-black/50'
         }`}
       >
         <div className="max-w-screen-xl mx-auto flex items-center justify-between px-4 py-3 h-[60px]">
@@ -61,6 +75,7 @@ function NavBar() {
           <div className="hidden lg:flex items-center font-semibold space-x-6">
             <NavLink
               to="/home"
+              onClick={closeMobileMenus}
               className={({ isActive }) =>
                 isActive ? 'text-blue-400' : 'hover:text-blue-400'
               }
@@ -69,6 +84,7 @@ function NavBar() {
             </NavLink>
             <NavLink
               to="/tv"
+              onClick={closeMobileMenus}
               className={({ isActive }) =>
                 isActive ? 'text-blue-400' : 'hover:text-blue-500'
               }
@@ -85,7 +101,13 @@ function NavBar() {
                 Movies <FiArrowDown />
               </button>
               {isGenresOpen && (
-                <div className="absolute left-0 mt-2 bg-gradient-to-tr from-black to-gray-900 text-white rounded shadow-lg z-50">
+                <div
+                  className={`absolute left-0 mt-4 text-white rounded shadow-lg z-50 ${
+                    isScrolled
+                      ? 'bg-gradient-to-br from-black to-gray-950'
+                      : 'bg-black/50'
+                  }`}
+                >
                   <ul className="py-2 w-40">
                     {genreList.map((g) => (
                       <li key={g}>
@@ -105,6 +127,7 @@ function NavBar() {
 
             <NavLink
               to="/top-rated"
+              onClick={closeMobileMenus}
               className={({ isActive }) =>
                 isActive ? 'text-blue-500' : 'hover:text-blue-500'
               }
@@ -113,6 +136,7 @@ function NavBar() {
             </NavLink>
             <NavLink
               to="/favorites"
+              onClick={closeMobileMenus}
               className={({ isActive }) =>
                 isActive ? 'text-blue-500' : 'hover:text-blue-500'
               }
@@ -121,7 +145,7 @@ function NavBar() {
             </NavLink>
 
             <button
-              onClick={() => setShowModal(true)}
+              onClick={closeGenreOnSearch}
               className="hover:text-blue-500 cursor-pointer"
             >
               <FiSearch />
@@ -144,17 +168,25 @@ function NavBar() {
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="lg:hidden px-4 pb-4 flex flex-col bg-gradient-to-tr from-black to-gray-900 text-white font-semibold space-y-2">
+          <div
+            className={`lg:hidden px-4 pb-4 flex flex-col items-end justify-end w-full text-white font-semibold space-y-2 ${
+              isScrolled
+                ? 'bg-gradient-to-tr from-black to-gray-900'
+                : 'bg-black/0'
+            }`}
+          >
             <NavLink
               to="/home"
+              onClick={closeMobileMenus}
               className={({ isActive }) =>
-                isActive ? 'text-blue-500' : 'hover:text-blue-500'
+                isActive ? 'text-blue-500 pt-3' : 'hover:text-blue-500'
               }
             >
               Home
             </NavLink>
             <NavLink
               to="/tv"
+              onClick={closeMobileMenus}
               className={({ isActive }) =>
                 isActive ? 'text-blue-500' : 'hover:text-blue-500'
               }
@@ -166,7 +198,8 @@ function NavBar() {
               onClick={toggleGenres}
               className="flex items-center gap-1 hover:text-blue-500"
             >
-              Movies <FiArrowDown />
+              <FiArrowDown />
+              Movies
             </button>
             {isGenresOpen && (
               <div className="pl-4 space-y-1">
@@ -175,7 +208,9 @@ function NavBar() {
                     key={g}
                     to={`/genre/${g.toLowerCase()}`}
                     className="block hover:text-blue-500"
-                    onClick={() => setGenresOpen(false)}
+                    onClick={closeMobileMenus}
+                    /*
+                    onClick={() => setGenresOpen(false)} */
                   >
                     {g}
                   </Link>
@@ -201,10 +236,11 @@ function NavBar() {
             </NavLink>
 
             <button
-              onClick={() => setShowModal(true)}
+              onClick={closeGenreOnSearch}
               className="flex items-center gap-1 hover:text-blue-500"
             >
-              <FiSearch /> Search
+              <FiSearch />
+              Search
             </button>
             <NavLink
               to="/profile"
@@ -217,12 +253,12 @@ function NavBar() {
           </div>
         )}
         {showModal && (
-          <div className="fixed inset-0 bg-black/95 flex items-center justify-center z-[999] px-4  fade-bg">
-            <div className="p-6 rounded-lg w-full  max-w-3xl shadow-xl relative showmodal">
+          <div className="fixed inset-0 bg-blue-950/60 flex items-center justify-center z-[999] px-4  fade-bg">
+            <div className="p-6 rounded-lg w-full bg-gradient-to-tr from-gray-950 to-gray-900  max-w-3xl shadow-xl relative showmodal">
               {/* Close Button */}
               <button
                 onClick={() => setShowModal(false)}
-                className="absolute top-3 right-3 text-gray-500 hover:text-gray-800"
+                className="fixed top-3 right-3 text-gray-500 hover:text-gray-800"
                 aria-label="Close"
               >
                 <FiX size={20} className="cursor-pointer" />
@@ -262,6 +298,7 @@ function NavBar() {
         <div className="flex justify-around text-white text-sm py-2">
           <NavLink
             to="/home"
+            onClick={closeMobileMenus}
             className={({ isActive }) =>
               isActive
                 ? 'flex flex-col items-center text-blue-500'
@@ -271,13 +308,14 @@ function NavBar() {
             <FiHome size={20} /> Home
           </NavLink>
           <button
-            onClick={() => setShowModal(true)}
+            onClick={closeGenreOnSearch}
             className="flex flex-col items-center"
           >
             <FiSearch size={20} /> Search
           </button>
           <NavLink
             to="/favorites"
+            onClick={closeMobileMenus}
             className={({ isActive }) =>
               isActive
                 ? 'flex flex-col items-center text-blue-500'
@@ -288,6 +326,7 @@ function NavBar() {
           </NavLink>
           <NavLink
             to="/top-rated"
+            onClick={closeMobileMenus}
             className={({ isActive }) =>
               isActive
                 ? 'flex flex-col items-center text-blue-500'
@@ -298,6 +337,7 @@ function NavBar() {
           </NavLink>
           <NavLink
             to="/profile"
+            onClick={closeMobileMenus}
             className={({ isActive }) =>
               isActive
                 ? 'flex flex-col items-center text-blue-500'
