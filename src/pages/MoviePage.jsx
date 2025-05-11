@@ -91,9 +91,9 @@ function MoviePage() {
     );
 
   return (
-    <div className="movie-page text-white overflow-hidden">
+    <div className="movie-page text-white overflow-hidden screenHeight">
       <div
-        className="hero-bg relative flex items-center"
+        className="hero-bg relative flex items-center "
         style={{
           backgroundImage: `url(https://image.tmdb.org/t/p/original${movie.backdrop_path})`,
           backgroundSize: 'cover',
@@ -102,9 +102,9 @@ function MoviePage() {
         }}
       >
         <div className="absolute top-0 left-0 w-full h-full bg-black opacity-70"></div>
-        <div className="relative z-10 px-16 w-full h-full flex flex-col justify-between mobile-header">
+        <div className="relative z-10 px-16 w-full h-full flex flex-col justify-center gap-10 mobile-header">
           <div className="mt-20">
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-bold">
+            <h1 className="text-4xl sm:text-5xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-bold">
               {movie.title}
             </h1>
 
@@ -125,7 +125,11 @@ function MoviePage() {
             </p>
 
             <p className="mt-4 text-yellow-400">
-              ⭐ {movie.vote_average.toFixed(1)} | {movie.runtime} min
+              ⭐ {movie.vote_average.toFixed(1)} | {/* {movie.runtime} min */}
+              <span>
+                {Math.floor(movie.runtime / 60)}h {movie.runtime % 60}
+                min
+              </span>
             </p>
 
             <p className="mt-2 text-gray-300 text-sm">

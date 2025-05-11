@@ -17,7 +17,6 @@ import TVShows from './pages/TVShows';
 import TopRated from './pages/TopRated';
 import SearchPage from './pages/SearchPage';
 import Home from './pages/Home';
-import Movies from './pages/Movies';
 
 function App() {
   return (
@@ -31,14 +30,13 @@ function App() {
         {' '}
         {/* padding to account for sticky navs */}
         <Routes>
-          <Route path="/home" element={<Home />} />
           <Route path="/" element={<LandingPage />} />
+          <Route path="/home" element={<Home />} />
           <Route path="/movie/:id" element={<MoviePage />} />
           <Route path="/favorites" element={<Favorites />} />
           <Route path="/genre/:genreName" element={<GenrePage />} />
           <Route path="/tv" element={<TVShows />} />
           <Route path="/top-rated" element={<TopRated />} />
-          <Route path="/movies" element={<Movies />} />
           <Route path="/search" element={<SearchPage />} />
         </Routes>
       </main>

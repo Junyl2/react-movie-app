@@ -6,4 +6,7 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
   base: '/react-movie-app',
   plugins: [tailwindcss(), react()],
+  server: {
+    port: 3000,
+  },
 });

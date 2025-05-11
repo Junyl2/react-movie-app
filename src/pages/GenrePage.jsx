@@ -1,6 +1,7 @@
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import MovieCard from '../components/MovieCard';
+import GenreFilter from '../components/GenreFilter';
 import Footer from '../components/Footer';
 
 function GenrePage() {
@@ -8,24 +9,44 @@ function GenrePage() {
   const [genreList, setGenreList] = useState([]);
   const [moviesByGenre, setMoviesByGenre] = useState({});
   const [loading, setLoading] = useState(true);
+  const [showSpinner, setShowSpinner] = useState(false);
 
   const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 
+  // Fetch genre list once
   useEffect(() => {
     async function fetchGenres() {
-      const res = await fetch(
-        `https://api.themoviedb.org/3/genre/movie/list?api_key=${API_KEY}`
-      );
-      const data = await res.json();
-      setGenreList(data.genres);
+      try {
+        const res = await fetch(
+          `https://api.themoviedb.org/3/genre/movie/list?api_key=${API_KEY}`
+        );
+        const data = await res.json();
+        setGenreList(data.genres);
+      } catch (err) {
+        console.error('Error fetching genres:', err);
+      }
     }
 
     fetchGenres();
   }, []);
 
+  // Delay spinner if loading exceeds 500ms
+  useEffect(() => {
+    let spinnerTimeout;
+    if (loading) {
+      spinnerTimeout = setTimeout(() => {
+        setShowSpinner(true);
+      }, 500);
+    } else {
+      setShowSpinner(false);
+    }
+
+    return () => clearTimeout(spinnerTimeout);
+  }, [loading]);
+
+  // Fetch movies by genre
   useEffect(() => {
     async function fetchAllGenresMovies() {
-      setLoading(true);
       const newMoviesByGenre = {};
 
       for (const genre of genreList) {
@@ -33,7 +54,7 @@ function GenrePage() {
           `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_genres=${genre.id}`
         );
         const data = await res.json();
-        newMoviesByGenre[genre.name] = data.results.slice(0, 6); // limit to 6 per genre
+        newMoviesByGenre[genre.name] = data.results.slice(0, 6);
       }
 
       setMoviesByGenre(newMoviesByGenre);
@@ -41,7 +62,6 @@ function GenrePage() {
     }
 
     async function fetchSingleGenreMovies() {
-      setLoading(true);
       const genreObj = genreList.find(
         (g) => g.name.toLowerCase() === genreName.toLowerCase()
       );
@@ -61,6 +81,7 @@ function GenrePage() {
     }
 
     if (genreList.length > 0) {
+      setLoading(true);
       if (genreName === 'all') {
         fetchAllGenresMovies();
       } else {
@@ -71,34 +92,34 @@ function GenrePage() {
 
   return (
     <div className="text-white">
-      {loading ? (
-        <p className="text-lg text-center mt-50 mb-86.5 loading">
-          Loading All Movies...
-        </p>
-      ) : (
+      {showSpinner && loading && (
+        <div className="fixed inset-0 bg-blue-950/40 flex items-center justify-center z-[999] px-4 fade-bg">
+          <div className="text-center flex flex-col items-center justify-center text-white relative">
+            <div className="animate-spin mb-4 rounded-full border-2 border-l-white border-r-white border-b-white border-t-transparent h-[40px] w-[40px]"></div>
+            Loading {genreName}...
+          </div>
+        </div>
+      )}
+
+      {!loading && (
         <>
           {/* Hero */}
-          <div
-            className="flex h-[300px] flex-col items-center justify-center text-center relative"
-            /* style={{
-              backgroundImage: `url(${heroBg})`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-            }} */
-          >
+          <div className="flex h-[250px] flex-col items-center justify-center text-center relative mt-15">
             <div className="absolute inset-0 bg-gradient-to-tr from-black to-gray-700 bg-opacity-60"></div>
             <h1 className="relative z-10 text-gray-100 text-5xl font-bold capitalize">
               {genreName === 'all'
-                ? 'All Movies by Genre'
+                ? 'All Movies'
                 : `${genreName.replace('-', ' ')} Movies`}
             </h1>
           </div>
 
+          {/* Genre Filter */}
+          <GenreFilter genreList={genreList} />
+
           {/* Movie Sections */}
           {Object.keys(moviesByGenre).map((genre) => (
-            <div key={genre} className="my-10 px-4">
-              <h2 className="text-2xl font-bold mb-4">{genre}</h2>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 ">
+            <div key={genre} className="px-4 mb-8">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
                 {moviesByGenre[genre].map((movie) => (
                   <MovieCard key={movie.id} movie={movie} />
                 ))}
@@ -106,38 +127,11 @@ function GenrePage() {
             </div>
           ))}
 
-          {/* Genre Filter */}
-          <div className="p-4 border-t border-gray-600 mt-10">
-            <h2 className="text-xl font-semibold mb-4">Explore By Genre</h2>
-            <div className="flex flex-wrap gap-2">
-              {genreList.map((genre) => (
-                <Link
-                  to={`/genre/${genre.name.toLowerCase()}`}
-                  key={genre.id}
-                  className={`px-4 py-1 rounded ${
-                    genre.name.toLowerCase() === genreName
-                      ? 'bg-blue-950 text-white'
-                      : ' bg-gradient-to-br text-sm from-black to-gray-950 hover:bg-none hover:bg-blue-950 flex items-center justify-center text-gray-200'
-                  }`}
-                >
-                  {genre.name}
-                </Link>
-              ))}
-              <Link
-                to={`/genre/all`}
-                className={`px-4 py-1 rounded ${
-                  genreName === 'all'
-                    ? 'bg-blue-950 text-white'
-                    : 'bg-black hover:bg-blue-950'
-                }`}
-              >
-                All
-              </Link>
-            </div>
-          </div>
+          {/* Filter again if needed */}
+          <GenreFilter genreList={genreList} type="movie" />
+          <Footer />
         </>
       )}
-      <Footer />
     </div>
   );
 }

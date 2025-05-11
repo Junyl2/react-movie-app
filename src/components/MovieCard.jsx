@@ -31,9 +31,18 @@ function MovieCard({ movie }) {
           </button>
         </div>
       </div>
-      <div className="movie-info relative flex flex-col gap-2 items-center justify-center text-center h-[100px]">
-        <h3 className="text-normal">{movie.title}</h3>
-        <p className="text-gray-400">{movie.release_date?.split('-')[0]}</p>
+      <div className="movie-info relative flex flex-col items-center justify-between text-center px-2 py-3 h-[100px] sm:h-[110px] md:h-[120px]">
+        <h3 className="text-sm sm:text-base font-semibold text-white line-clamp-2">
+          {movie.title || movie.name}
+        </h3>
+        <p className="text-gray-400 text-xs sm:text-sm">
+          {(movie.release_date || movie.first_air_date)?.split('-')[0]}
+        </p>
+        {movie.vote_average !== undefined && (
+          <p className="text-yellow-400 text-sm sm:text-base font-medium">
+            ⭐ {movie.vote_average.toFixed(1)}
+          </p>
+        )}
       </div>
     </Link>
   );

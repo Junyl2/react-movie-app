@@ -103,10 +103,33 @@ h1 {
   animation: boxshadow 0.7s infinite;
 }
 
+.screenHeight {
+  height: 100vh;
+  height: 100dvh;
+}
+
 .loading {
   transition: transform 0.3s ease-in-out;
   animation: dance 0.7s infinite;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
 }
+.loading::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  z-index: 0;
+  height: 100%;
+  width: 100%;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.9);
+}
+
 @keyframes dance {
   0% {
     opacity: 0.3;
@@ -118,6 +141,10 @@ h1 {
   }
 }
 @media (max-width: 769px) {
+  .mobile-logo {
+    margin-left: -4px;
+    padding: 0px 1.5rem;
+  }
   .mobile-detail {
     display: none;
   }
@@ -125,7 +152,7 @@ h1 {
     margin-bottom: 20px;
   }
   .mobile-header {
-    padding: 0px 1.25rem;
+    padding: 0px 1.5rem;
   }
   #root {
     padding-bottom: 55px;
@@ -210,6 +237,7 @@ h1 {
 }
 .jflix {
   margin-top: 5px;
+  margin-left: -2px;
   height: 110px;
   width: 100%;
   object-fit: cover;
